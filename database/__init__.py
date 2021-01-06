@@ -5,14 +5,13 @@ default_database = 'database/ddoi.db'
 
 class DatabaseManager:
     def __init__(self, database: str):
-        self.connection = sql.Connection(database)
-        self.connection.row_factory = sql.Row
-        self.cursor = self.connection.cursor()
-        self.table = None
+        self.connection = self.cursor = self.table = None
+        self.create_connection(database)
 
     def use_table(self, name: str, **table_structure: object) -> None:
-        # check existence of table
+        # check existence of selected table
         if not self._table_exists(name):
+            # create table in current database if it doesn't exist
             self._create_table(name, **table_structure)
         self.table = name
 
@@ -27,6 +26,7 @@ class DatabaseManager:
             return False
 
     def _create_table(self, name: str, **structure: object) -> None:
+        # convert structure object to sql query string
         structure_string = self._join(map(lambda item: ' '.join(item), structure.items()))
         self.cursor.execute('CREATE TABLE {table_name} ({table_structure})'.format(
             table_name=name,
@@ -42,6 +42,7 @@ class DatabaseManager:
         self.connection.close()
 
     def get(self, **query: object) -> dict:
+        # convert query object to sql query string
         conditions = self._join([f'{k}={repr(v)}' for k, v in query.items()])
         self.cursor.execute("SELECT * FROM {table} WHERE {conditions}".format(
             table=self.table,
@@ -66,6 +67,7 @@ class DatabaseManager:
     def revert(self) -> None:
         self.connection.rollback()
 
-    def connect(self, database: str) -> None:
-        self.connection = sql.connect(database)
+    def create_connection(self, database: str) -> None:
+        self.connection = sql.Connection(database)
+        self.connection.row_factory = sql.Row
         self.cursor = self.connection.cursor()
