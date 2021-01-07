@@ -1,3 +1,4 @@
+from src.utils import QueryRow
 import sqlite3 as sql
 
 default_database = 'database/ddoi.db'
@@ -12,7 +13,13 @@ class DatabaseManager:
         # check existence of selected table
         if not self._table_exists(name):
             # create table in current database if it doesn't exist
-            self._create_table(name, **table_structure)
+            if not table_structure:
+                raise ValueError(f'Structure for {name!r} table is not specified.')
+            else:
+                self._create_table(name, **table_structure)
+        else:
+            pass
+        # set table name as current selection or active table
         self.table = name
 
     def _apply(self) -> None:
@@ -50,8 +57,9 @@ class DatabaseManager:
         ))
         result = self.cursor.fetchone()
         if result:
-            return dict(zip(result.keys(), list(result)))
-        return {}
+            return QueryRow(result.keys(), list(result))
+        else:
+            return QueryRow([], [])
 
     def insert(self, **query: object) -> None:
         self.cursor.execute("INSERT INTO {table} ({columns}) VALUES ({values})".format(
