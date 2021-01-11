@@ -1,7 +1,23 @@
-from src.utils import QueryRow
+from __version__ import __title__
+from src import QueryRow
 import sqlite3 as sql
+import os
 
-default_database = 'database/ddoi.db'
+
+DB_PATH = os.path.join(
+    os.environ.get('USERPROFILE'),
+    f'.{__title__}',
+    'database',
+    f'{__title__}.db'
+)
+
+try:
+    open(DB_PATH)
+except FileNotFoundError:
+    try:
+        os.mkdir(os.path.dirname(DB_PATH))
+    except FileExistsError:
+        pass
 
 
 class DatabaseManager:
