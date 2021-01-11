@@ -1,5 +1,5 @@
 from __version__ import __title__
-from src import QueryRow
+from utils import QueryRow
 import sqlite3 as sql
 import os
 
