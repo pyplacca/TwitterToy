@@ -26,8 +26,8 @@ async def get_quote(id_=-1, retry=5):
         param = ''
     try:
         url = f"{ROUTES['/']}{param}"
-        res = requests.request('GET', url, headers=HEADERS)
-        return json.loads(res.json())
+        res = requests.get(url, headers=HEADERS)
+        return res.json()
     except ConnectionError as error:
         if retry == 0:
             return error
