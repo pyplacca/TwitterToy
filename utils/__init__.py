@@ -1,5 +1,6 @@
-from .fetch import get_quote
+from .db import DatabaseManager, DB_PATH
 from .logger import TweetLogger
+from .fetch import get_quote
 
 
 class QueryRow(dict):
