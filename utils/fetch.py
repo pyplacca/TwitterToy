@@ -1,9 +1,7 @@
-import requests
 import asyncio
-import json
+import requests
 
 
-HEADERS = {'User-Agent': 'Chrome'}
 QUOTES_HOST_URL = 'https://pplrq.herokuapp.com/quotes/'
 ROUTES = {
     '/': QUOTES_HOST_URL,
@@ -11,10 +9,11 @@ ROUTES = {
 }
 
 
-async def get_quote(id_=-1, retry=5):
+async def get_quote(id_=-1, retry=5, retry_delay=5.0):
     """
     :param id_: set to -1 means a random quote else id must be a positive number greater than 0
     :param retry: number of times to retry a request upon failure
+    :param retry_delay: represents how long to wait (in seconds) before retrying
     :return: a dict object of a random quote or one with a specified id from the quotes api
     """
     if id_ != -1:
@@ -26,12 +25,13 @@ async def get_quote(id_=-1, retry=5):
         param = ''
     try:
         url = f"{ROUTES['/']}{param}"
-        res = requests.get(url, headers=HEADERS)
+        res = requests.get(url)
         return res.json()
-    except ConnectionError as error:
+    except requests.exceptions.ConnectionError as error:
         if retry == 0:
-            return error
+            print('Max retry exceeded. Exiting...')
+            raise error
         else:
-            print(f'Retrying..., retry={retry}')
-            await asyncio.sleep(5.0)
-            return get_quote(id_, retry-1)
+            print(f'Failed to connect. Retrying..., retry={retry}')
+            await asyncio.sleep(retry_delay)
+            return await get_quote(id_, retry-1)
