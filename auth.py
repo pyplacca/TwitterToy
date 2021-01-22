@@ -24,7 +24,7 @@ class TweetAPIHandler:
     @property
     def api(self):
         # configure api
-        return tweepy.API(self.auth, retry_count=5, retry_delay=10)
+        return tweepy.API(self.auth, retry_count=3, retry_delay=10)
 
 
 API = TweetAPIHandler().api
