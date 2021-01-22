@@ -4,14 +4,15 @@ import sys
 from __version__ import __title__
 
 
-main_dir = os.environ.get('USERPROFILE')
+default_dir = os.environ.get('USERPROFILE')
 fallback_dir = os.path.join(os.path.dirname(sys.argv[0]), 'bot')
 
-if not main_dir:
+# create our fallback directory if the default doesn't exist
+if not default_dir:
     os.mkdir(fallback_dir)
 
 ROOT_DIR = os.path.join(
-    main_dir or fallback_dir,
+    default_dir or fallback_dir,
     f'.{__title__}',
 )
 
