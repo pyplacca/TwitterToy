@@ -1,23 +1,5 @@
-from __version__ import __title__
-from utils import QueryRow
 import sqlite3 as sql
-import os
-
-
-DB_PATH = os.path.join(
-    os.environ.get('USERPROFILE'),
-    f'.{__title__}',
-    'database',
-    f'{__title__}.db'
-)
-
-try:
-    open(DB_PATH)
-except FileNotFoundError:
-    try:
-        os.mkdir(os.path.dirname(DB_PATH))
-    except FileExistsError:
-        pass
+from .misc import QueryRow
 
 
 class DatabaseManager:
@@ -32,10 +14,10 @@ class DatabaseManager:
             if not table_structure:
                 raise ValueError(f'Structure for {name!r} table is not specified.')
             else:
-                self._create_table(name, **table_structure)
+                self.create_table(name, **table_structure)
         else:
             pass
-        # set table name as current selection or active table
+        # set as current or active table
         self.table = name
 
     def _apply(self) -> None:
@@ -48,7 +30,7 @@ class DatabaseManager:
         except sql.OperationalError:
             return False
 
-    def _create_table(self, name: str, **structure: object) -> None:
+    def create_table(self, name: str, **structure: object) -> None:
         # convert structure object to sql query string
         structure_string = self._join(map(lambda item: ' '.join(item), structure.items()))
         self.cursor.execute('CREATE TABLE {table_name} ({table_structure})'.format(
@@ -64,18 +46,28 @@ class DatabaseManager:
     def disconnect(self):
         self.connection.close()
 
-    def get(self, **query: object) -> dict:
+    def _select(self, **query: object) -> None:
         # convert query object to sql query string
         conditions = self._join([f'{k}={repr(v)}' for k, v in query.items()])
         self.cursor.execute("SELECT * FROM {table} WHERE {conditions}".format(
             table=self.table,
             conditions=conditions
         ))
-        result = self.cursor.fetchone()
-        if result:
-            return QueryRow(result.keys(), list(result))
-        else:
-            return QueryRow([], [])
+
+    @staticmethod
+    def _to_row_args(row):
+        result = [row.keys(), list(row)] if row else [[], []]
+        return result
+
+    def get(self, **query: object) -> QueryRow:
+        self._select(**query)
+        query_res = self.cursor.fetchone()
+        return QueryRow(*self._to_row_args(query_res))
+
+    def get_all(self, **query: object) -> map:
+        self._select(**query)
+        query_res = self.cursor.fetchall()
+        return map(lambda row: QueryRow(*self._to_row_args(row)), query_res)
 
     def insert(self, **query: object) -> None:
         self.cursor.execute("INSERT INTO {table} ({columns}) VALUES ({values})".format(
