@@ -84,7 +84,7 @@ async def main():
                 print('\nRestarting...')
                 await asyncio.sleep(restart_delay)
 
-
+"""
 async def test_main():
     while True:
         await asyncio.sleep(2)
@@ -95,6 +95,7 @@ async def test_main_2():
     while True:
         await asyncio.sleep(1.35)
         print('Running some random async task...')
+"""
 
 
 # =====================================
