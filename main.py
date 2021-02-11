@@ -45,7 +45,7 @@ async def main():
 
                 try:
                     # tweet received quote
-                    tweet = api.update_status(status=f"{quote['quote']}\n\n- {quote['author']}")
+                    tweet = api.update_status(status=f"{quote['quote']}\n\n- {quote['author']} -")
 
                     if tweet.id:
                         print(f'Tweet posted: {tweet.id} -> {truncate(tweet.text, 57)!r}')
@@ -109,5 +109,5 @@ async def async_tasks():
     )
 
 if __name__ == '__main__':
-    print('Firing up the bot\'s engine...')
+    print('Fired up the bot\'s engine...')
     asyncio.run(async_tasks())
