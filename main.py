@@ -1,8 +1,10 @@
+import logging
+
 import requests
 import asyncio
 import json
 import time
-from logging import INFO, ERROR
+from logging import INFO, ERROR, getLevelName
 
 from tweepy.error import TweepError
 
@@ -21,14 +23,13 @@ logger = TweetLogger()
 database = DatabaseManager(conf.DB_PATH)
 database.use_table('Tweets', timestamp='text', id='int', quote='int')
 
-TWEET_INTERVAL = 4.0 * 60 * 60
-RESTART_DELAY = 10.0
 
-
-# ==========
+# ===================
 # Main task
-# ==========
+# ===================
 async def main():
+    number_of_tweets = 6
+    restart_delay = 10.0
     quote_id = -1
 
     while True:
@@ -44,7 +45,7 @@ async def main():
 
                 try:
                     # tweet received quote
-                    tweet = api.update_status(status=f"{quote['quote']} ~ {quote['author']}")
+                    tweet = api.update_status(status=f"{quote['quote']}\n\n- {quote['author']}")
 
                     if tweet.id:
                         print(f'Tweet posted: {tweet.id} -> {truncate(tweet.text, 57)!r}')
@@ -75,19 +76,37 @@ async def main():
             await logger.log_message(msg=log_msg)
 
             if next_tweet:
-                print(f"Snoozing for {convert_time(TWEET_INTERVAL)} until next tweet 💤...")
-                await asyncio.sleep(TWEET_INTERVAL)
+                snooze_time = (24 / number_of_tweets) * 60 * 60
+                print(f"Snoozing for {convert_time(snooze_time)} until next tweet 💤")
+                await asyncio.sleep(snooze_time)
 
             if restart:
                 print('\nRestarting...')
-                await asyncio.sleep(RESTART_DELAY)
+                await asyncio.sleep(restart_delay)
 
-            # print('\n')
+
+async def test_main():
+    while True:
+        await asyncio.sleep(2)
+        print('What is this async await thingy?')
+
+
+async def test_main_2():
+    while True:
+        await asyncio.sleep(1.35)
+        print('Running some random async task...')
 
 
 # =====================================
-#
+# Task Runner
 # =====================================
+async def async_tasks():
+    return await asyncio.gather(
+        main(),
+        # test_main(),
+        # test_main_2()
+    )
+
 if __name__ == '__main__':
     print('Firing up bot engine...')
-    asyncio.run(main())
+    asyncio.run(async_tasks())
