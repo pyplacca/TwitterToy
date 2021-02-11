@@ -4,4 +4,5 @@ A friendly bot that tweets inspirational quotes
 <br/>
 
 # Bot Status
-Yet to activate this bad boy, and get it tweeting away some great quotes.
+Yet to host this kid, and get it tweeting away some great quotes. <br/>
+I could run this bot from my PC but, my PC is neither always powered on nor connected to the internet.
