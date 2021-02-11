@@ -108,5 +108,5 @@ async def async_tasks():
     )
 
 if __name__ == '__main__':
-    print('Firing up bot engine...')
+    print('Firing up the bot\'s engine...')
     asyncio.run(async_tasks())
