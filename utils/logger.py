@@ -16,9 +16,10 @@ class TweetLogger(logging.Logger):
     def __init__(self):
         super().__init__(f'{__title__}.TweetLogger', DEFAULT_LEVEL)
         self.addHandler(LOG_HANDLER)
+        self.setLevel(logging.getLevelName(DEFAULT_LEVEL))
 
-    async def log_message(self, level: int = DEFAULT_LEVEL, msg: str = '') -> None:
-        log_level = level
+    async def log_message(self, level: int = None, msg: str = '') -> None:
+        log_level = level or self.getEffectiveLevel()
         message = logging.BASIC_FORMAT % ({
             'levelname': logging.getLevelName(log_level),
             'message': msg,
