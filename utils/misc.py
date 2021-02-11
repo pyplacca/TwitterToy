@@ -14,11 +14,15 @@ class QueryRow(dict):
 def convert_time(seconds):
     n = seconds // (60 * 60)
     if n:
-        return f'{int(n)} hour(s)'
+        return f'{int(n)} hour{appends_s(n)}'
     n = seconds // 60
     if n:
-        return f'{int(n)} minute(s)'
-    return f'{int(seconds)} second(s)'
+        return f'{int(n)} minute{appends_s(n)}'
+    return f'{int(seconds)} second{appends_s(n)}'
+
+
+def appends_s(count):
+    return f"{['', 's'][int(count) != 1]}"
 
 
 def truncate(text, length):
