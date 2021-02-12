@@ -8,7 +8,7 @@ default_dir = os.environ.get('USERPROFILE')
 fallback_dir = os.path.join(os.path.dirname(sys.argv[0]), 'bot')
 
 # create our fallback directory if the default doesn't exist
-if not default_dir:
+if not default_dir and not os.path.exists(fallback_dir):
     os.mkdir(fallback_dir)
 
 ROOT_DIR = os.path.join(
