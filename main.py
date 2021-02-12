@@ -8,7 +8,7 @@ from logging import INFO, ERROR, getLevelName
 
 from tweepy.error import TweepError
 
-import __config__ as conf
+import __config__ as cfg
 from auth import API
 from utils import DatabaseManager, TweetLogger, get_quote, convert_time, truncate, console_log
 
@@ -20,7 +20,7 @@ api = API
 
 logger = TweetLogger()
 
-database = DatabaseManager(conf.DB_PATH)
+database = DatabaseManager(cfg.DB_PATH)
 database.use_table('Tweets', timestamp='text', id='int', quote='int')
 
 
