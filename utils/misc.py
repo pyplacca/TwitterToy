@@ -1,3 +1,6 @@
+import time
+
+
 class QueryRow(dict):
     def __init__(self, keys, values):
         arg_zip = zip(keys, values)
@@ -27,3 +30,7 @@ def appends_s(count):
 
 def truncate(text, length):
     return f'{text[:length]}{"..." if length < len(text) else ""}'
+
+
+def console_log(msg):
+    print(f"{time.strftime('%d/%m/%Y %H:%M:%S')} --- {msg}")

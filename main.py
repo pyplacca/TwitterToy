@@ -10,7 +10,7 @@ from tweepy.error import TweepError
 
 import __config__ as conf
 from auth import API
-from utils import DatabaseManager, TweetLogger, get_quote, convert_time, truncate
+from utils import DatabaseManager, TweetLogger, get_quote, convert_time, truncate, console_log
 
 
 # =====================================
@@ -48,7 +48,7 @@ async def main():
                     tweet = api.update_status(status=f"{quote['quote']}\n\n- {quote['author']} -")
 
                     if tweet.id:
-                        print(f'Tweet posted: {tweet.id} -> {truncate(tweet.text, 57)!r}')
+                        console_log(f'Tweet posted: {tweet.id} -> {truncate(tweet.text, 57)!r}')
                         # record tweet in the database
                         database.insert(timestamp=time.asctime(), id=tweet.id, quote=quote['id'])
                         logger.setLevel(INFO)
@@ -61,7 +61,7 @@ async def main():
 
                 except TweepError as tweet_error:
                     tweet_error = json.loads(tweet_error.response.text)['errors'].pop()
-                    print(tweet_error)
+                    console_log(tweet_error)
                     log_msg = f"Tweet failed - {tweet_error['code']} - {tweet_error['message']}"
 
             else:
@@ -72,12 +72,12 @@ async def main():
             restart = True
 
         finally:
-            print(f"Logging message: {log_msg}")
+            console_log(f"Logging message to file: {log_msg}")
             await logger.log_message(msg=log_msg)
 
             if next_tweet:
                 snooze_time = (24 / number_of_tweets) * 60 * 60
-                print(f"Snoozing for {convert_time(snooze_time)} until next tweet 💤")
+                console_log(f"Snoozing for {convert_time(snooze_time)} until next tweet 💤")
                 await asyncio.sleep(snooze_time)
 
             if restart:
