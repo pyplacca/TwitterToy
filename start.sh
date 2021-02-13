@@ -1,4 +1,4 @@
-# shell command to enable bot to run on glitch servers
+# shell command to enable bot to run on glitch.com
 
 MD5="$(md5sum requirements.txt | cut -f1 -d' ')-site-packages"
 
