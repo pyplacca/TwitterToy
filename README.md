@@ -15,4 +15,4 @@ To have this bot go live, it needs to be constantly active. Although both platfo
 <br/>
 Okay so it seems after a little digging, Heroku might be our best option. It's got exactly what we need and, it's freemium. Just the perfect sauce 👌🏿🙂
 <br/>
-We've got to get a few things set, and we'll be ready to go live 🥳
+We've got to get a few things set, and we'll be ready to go live on Twitter 🥳
