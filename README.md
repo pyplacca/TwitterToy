@@ -13,4 +13,4 @@ I am currently weighing between the options of hosting on [Repl](https://repl.it
 To have this bot go live, it needs to be constantly active. Although both platforms offer support for that, it's much cheaper on Repl as compared to Glitch.
 <br/>
 <br/>
-Okay so it seems after a little digging, Heroku might be our best option. It's got exactly what we need and, it's freemium👌🏿🙂
+Okay so it seems after a little digging, Heroku might be our best option. It's got exactly what we need and, it's freemium. Just the perfect sauce 👌🏿🙂
