@@ -1,5 +1,6 @@
 import os
 import sys
+from pathlib import Path
 
 from __version__ import __title__
 
@@ -7,23 +8,11 @@ from __version__ import __title__
 default_dir = os.environ.get('USERPROFILE')
 fallback_dir = os.path.join(os.path.dirname(sys.argv[0]), 'bot')
 
-# create our fallback directory if the default doesn't exist
-if not default_dir and not os.path.exists(fallback_dir):
-    os.mkdir(fallback_dir)
+# define project base directory for logging and database querying
+ROOT_DIR = Path(os.path.join(default_dir or fallback_dir, f'.{__title__}'))
 
-ROOT_DIR = os.path.join(
-    default_dir or fallback_dir,
-    f'.{__title__}',
-)
-
-# create root directory if it doesn't already exists
-if not os.path.exists(ROOT_DIR):
-    os.mkdir(ROOT_DIR)
-
-DB_DIR = os.path.join(ROOT_DIR, 'database')
-
-# create database directory if it doesn't already exists
-if not os.path.exists(DB_DIR):
-    os.mkdir(DB_DIR)
+DB_DIR = Path(os.path.join(ROOT_DIR, 'database'))
+# define and create database directory
+DB_DIR.mkdir(exist_ok=True, parents=True)
 
 DB_PATH = os.path.join(DB_DIR, f'{__title__}.db')
